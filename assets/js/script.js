@@ -1,7 +1,8 @@
 let cityName = "Detroit";
 let weatherCurrentURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18`;
 let weatherForecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18`
-
+let searchButton = document.querySelector('#searchButton');
+let searchInput = document.querySelector('#searchInput')
 function getWeather(){
 fetch(weatherCurrentURL)
     .then(function (response) {
@@ -21,4 +22,8 @@ function getForecast(){
         console.log(data);
     })
 }
+
+searchButton.addEventListener('click', ()=> {
+    console.log(searchInput.value);
+})
 
