@@ -1,12 +1,12 @@
 let cityName = "";
 let searchButton = document.querySelector('#searchButton');
 let searchInput = document.querySelector('#searchInput')
-
+let CurrentWeatherDiv = document.querySelector('#currentWeather');
 
 searchButton.addEventListener('click', () => {
     cityName = searchInput.value;
-    let weatherCurrentURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18`;
-    let weatherForecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18`
+    let weatherCurrentURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18&units=imperial`;
+    let weatherForecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18&units=imperial`;
     function getWeather() {
         fetch(weatherCurrentURL)
             .then(function (response) {
@@ -14,9 +14,13 @@ searchButton.addEventListener('click', () => {
             })
             .then(function (data) {
                 console.log(data);
+                weatherTemperature = document.createElement('h3');
+                weatherTemperature.innerHTML = data.main.temp;
+                CurrentWeatherDiv.appendChild(weatherTemperature);
+
             });
     }
-    
+
     function getForecast() {
         fetch(weatherForecastURL)
             .then(function (response) {
@@ -26,7 +30,7 @@ searchButton.addEventListener('click', () => {
                 console.log(data);
             })
     }
-    
+
     getWeather();
     getForecast();
 })
