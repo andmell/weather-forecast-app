@@ -2,11 +2,13 @@ let cityName = "";
 let searchButton = document.querySelector('#searchButton');
 let searchInput = document.querySelector('#searchInput')
 let CurrentWeatherDiv = document.querySelector('#currentWeather');
-
+console.log(dayjs().hour())
 searchButton.addEventListener('click', () => {
     cityName = searchInput.value;
     let weatherCurrentURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18&units=imperial`;
     let weatherForecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18&units=imperial`;
+
+
     function getWeather() {
         fetch(weatherCurrentURL)
             .then(function (response) {
@@ -14,13 +16,28 @@ searchButton.addEventListener('click', () => {
             })
             .then(function (data) {
                 console.log(data);
-                weatherTemperature = document.createElement('h3');
-                weatherTemperature.innerHTML = data.main.temp;
+                weatherTemperature = document.createElement('p');
+                weatherTemperature.innerHTML =
+                    `<div id="cwTop" class="d-flex justify-content-between">
+                    <h3>${cityName}</h3>
+                    <h3>${dayjs().format('MMMM-DD-YYYY')}</h3>
+                </div>
+                <div id="cwBottom" class="d-flex justify-content-between p-2">
+                    <h4>${data.weather[0].description}</h4>
+                    <h4>${data.main.temp}\u00B0F</h4>
+                    <h4>${data.main.humidity}%</h4>
+                    <h4>${data.wind.speed} mph</h4>
+                </div>`
                 CurrentWeatherDiv.appendChild(weatherTemperature);
+                // `For the city of ${cityName}:<br>
+                // ${data.main.temp} Degrees Fahrenheit <br> 
+                // ${data.main.humidity}% relative humidity <br>
+                // Current weather conditions: ${data.weather[0].description} <br>
+                // Wind speed is ${data.wind.speed} mph`
+                // CurrentWeatherDiv.appendChild(weatherTemperature);
 
             });
     }
-
     function getForecast() {
         fetch(weatherForecastURL)
             .then(function (response) {
