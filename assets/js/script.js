@@ -2,7 +2,11 @@ let cityName = "";
 let searchButton = document.querySelector('#searchButton');
 let searchInput = document.querySelector('#searchInput')
 let CurrentWeatherDiv = document.querySelector('#currentWeather');
-console.log(dayjs().hour())
+console.log(dayjs().unix(1690416000))
+
+
+
+
 searchButton.addEventListener('click', () => {
     cityName = searchInput.value;
     let weatherCurrentURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18&units=imperial`;
@@ -18,7 +22,7 @@ searchButton.addEventListener('click', () => {
                 console.log(data);
                 weatherTemperature = document.createElement('p');
                 weatherTemperature.innerHTML =
-                    `<div id="cwTop" class="d-flex justify-content-between">
+                    `<div id="cwTop" class="d-flex justify-content-between border-solid-1px-black">
                     <h3>${cityName}</h3>
                     <h3>${dayjs().format('MMMM-DD-YYYY')}</h3>
                 </div>
