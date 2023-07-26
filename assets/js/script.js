@@ -3,6 +3,8 @@ let searchButton = document.querySelector('#searchButton');
 let searchInput = document.querySelector('#searchInput')
 let CurrentWeatherDiv = document.querySelector('#currentWeather');
 let forecastBlocks = document.querySelector('#forecastBlocks');
+let pastSearches = document.querySelector('#pastSearches');
+renderButtons();
 
 function saveSearch(cityString){
     const localRead = JSON.parse(localStorage.getItem("historyArray"));
@@ -17,70 +19,89 @@ function saveSearch(cityString){
         localRead.push(cityString);
         localStorage.setItem("historyArray", JSON.stringify(localRead));
     }
+    renderButtons();
+    // const localReadAgain = JSON.parse(localStorage.getItem("historyArray"))
+    // for (var i = 0; i < localReadAgain.length; i++){
+    //     var pastButton = document.createElement('button');
+    //     pastButton.textContent = localReadAgain[i];
+    //     pastSearches.appendChild(pastButton);
+    // }
+}
+function renderButtons() {
+    pastSearches.innerHTML='';
+    const localReadAgain = JSON.parse(localStorage.getItem("historyArray"))
+    for (var i = 0; i < localReadAgain.length; i++){
+        var pastButton = document.createElement('button');
+        pastButton.textContent = localReadAgain[i];
+        pastButton.addEventListener('click', (e)=>{
+            getWeather(e.target.textContent);
+            getForecast(e.target.textContent);
+            // getWeather(localReadAgain[i]);
+            // getForecast(localReadAgain[i]);
+        })
+        pastSearches.appendChild(pastButton);
+}}
+
+function getWeather(cityName) {
+    let weatherCurrentURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18&units=imperial`;
+    fetch(weatherCurrentURL)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            if (data.name) {
+                saveSearch(data.name);
+                console.log(data);
+                weatherTemperature = document.createElement('p');
+                weatherTemperature.innerHTML =
+                    `<div id="cwTop" class="d-flex justify-content-between border-solid-1px-black">
+                    <h3>${data.name}</h3>
+                    <h3>${dayjs().format('MMMM-DD-YYYY')}</h3>
+                </div>
+                <div id="cwBottom" class="d-flex justify-content-between p-2">
+                    <h4>${data.weather[0].description}</h4>
+                    <h4>${data.main.temp}\u00B0F</h4>
+                    <h4>${data.main.humidity}%</h4>
+                    <h4>${data.wind.speed} mph</h4>
+                </div>`
+                CurrentWeatherDiv.innerHTML = '';
+                CurrentWeatherDiv.appendChild(weatherTemperature);
+            } 
+            // `For the city of ${cityName}:<br>
+            // ${data.main.temp} Degrees Fahrenheit <br> 
+            // ${data.main.humidity}% relative humidity <br>
+            // Current weather conditions: ${data.weather[0].description} <br>
+            // Wind speed is ${data.wind.speed} mph`
+            // CurrentWeatherDiv.appendChild(weatherTemperature);
+
+        });
 }
 
+function getForecast(cityName) {
+    let weatherForecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18&units=imperial`;
+    fetch(weatherForecastURL)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            // console.log(data);
+            forecastBlocks.innerHTML='';
+            for (var i = 5; i < data.list.length; i+=8){
+                // console.log(data.list[i]);
+                var forecastBlock = document.createElement('div');
+                forecastBlock.classList.add('col');
+                forecastBlock.innerHTML = `<b>${new Date(data.list[i].dt * 1000).toLocaleDateString()}</b> <br>
+                <img alt="weather icon" src="https://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png"/>, ${data.list[i].main.temp} <br>
+                ${data.list[i].main.humidity}, ${data.list[i].wind.speed} `
+                forecastBlocks.appendChild(forecastBlock);
+            }
+        })
+}
 
 searchButton.addEventListener('click', () => {
     cityName = searchInput.value;
-    let weatherCurrentURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18&units=imperial`;
-    let weatherForecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18&units=imperial`;
-
-
-    function getWeather() {
-        fetch(weatherCurrentURL)
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                if (data.name) {
-                    saveSearch(data.name);
-                    console.log(data);
-                    weatherTemperature = document.createElement('p');
-                    weatherTemperature.innerHTML =
-                        `<div id="cwTop" class="d-flex justify-content-between border-solid-1px-black">
-                        <h3>${data.name}</h3>
-                        <h3>${dayjs().format('MMMM-DD-YYYY')}</h3>
-                    </div>
-                    <div id="cwBottom" class="d-flex justify-content-between p-2">
-                        <h4>${data.weather[0].description}</h4>
-                        <h4>${data.main.temp}\u00B0F</h4>
-                        <h4>${data.main.humidity}%</h4>
-                        <h4>${data.wind.speed} mph</h4>
-                    </div>`
-                    CurrentWeatherDiv.innerHTML = '';
-                    CurrentWeatherDiv.appendChild(weatherTemperature);
-                } 
-                // `For the city of ${cityName}:<br>
-                // ${data.main.temp} Degrees Fahrenheit <br> 
-                // ${data.main.humidity}% relative humidity <br>
-                // Current weather conditions: ${data.weather[0].description} <br>
-                // Wind speed is ${data.wind.speed} mph`
-                // CurrentWeatherDiv.appendChild(weatherTemperature);
-
-            });
-    }
-    function getForecast() {
-        fetch(weatherForecastURL)
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                // console.log(data);
-                forecastBlocks.innerHTML='';
-                for (var i = 5; i < data.list.length; i+=8){
-                    // console.log(data.list[i]);
-                    var forecastBlock = document.createElement('div');
-                    forecastBlock.classList.add('col');
-                    forecastBlock.innerHTML = `<b>${new Date(data.list[i].dt * 1000).toLocaleDateString()}</b> <br>
-                    <img alt="weather icon" src="https://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png"/>, ${data.list[i].main.temp} <br>
-                    ${data.list[i].main.humidity}, ${data.list[i].wind.speed} `
-                    forecastBlocks.appendChild(forecastBlock);
-                }
-            })
-    }
-
-    getWeather();
-    getForecast();
+    getWeather(cityName);
+    getForecast(cityName);
 })
 
 
