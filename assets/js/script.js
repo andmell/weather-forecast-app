@@ -3,9 +3,21 @@ let searchButton = document.querySelector('#searchButton');
 let searchInput = document.querySelector('#searchInput')
 let CurrentWeatherDiv = document.querySelector('#currentWeather');
 let forecastBlocks = document.querySelector('#forecastBlocks');
-console.log(dayjs().unix(1690416000))
 
-
+function saveSearch(cityString){
+    const localRead = JSON.parse(localStorage.getItem("historyArray"));
+    if (!localRead || localRead.length === 0) {
+        localStorage.setItem("historyArray", JSON.stringify([cityString]))
+    } else if (localRead.includes(cityString)) {
+        var firstCity = localRead.indexOf(cityString);
+        localRead.splice(firstCity, 1);
+        localRead.push(cityString);
+        localStorage.setItem("historyArray", JSON.stringify(localRead));
+    } else {
+        localRead.push(cityString);
+        localStorage.setItem("historyArray", JSON.stringify(localRead));
+    }
+}
 
 
 searchButton.addEventListener('click', () => {
@@ -20,21 +32,24 @@ searchButton.addEventListener('click', () => {
                 return response.json();
             })
             .then(function (data) {
-                console.log(data);
-                weatherTemperature = document.createElement('p');
-                weatherTemperature.innerHTML =
-                    `<div id="cwTop" class="d-flex justify-content-between border-solid-1px-black">
-                    <h3>${cityName}</h3>
-                    <h3>${dayjs().format('MMMM-DD-YYYY')}</h3>
-                </div>
-                <div id="cwBottom" class="d-flex justify-content-between p-2">
-                    <h4>${data.weather[0].description}</h4>
-                    <h4>${data.main.temp}\u00B0F</h4>
-                    <h4>${data.main.humidity}%</h4>
-                    <h4>${data.wind.speed} mph</h4>
-                </div>`
-                CurrentWeatherDiv.innerHTML = '';
-                CurrentWeatherDiv.appendChild(weatherTemperature);
+                if (data.name) {
+                    saveSearch(data.name);
+                    console.log(data);
+                    weatherTemperature = document.createElement('p');
+                    weatherTemperature.innerHTML =
+                        `<div id="cwTop" class="d-flex justify-content-between border-solid-1px-black">
+                        <h3>${data.name}</h3>
+                        <h3>${dayjs().format('MMMM-DD-YYYY')}</h3>
+                    </div>
+                    <div id="cwBottom" class="d-flex justify-content-between p-2">
+                        <h4>${data.weather[0].description}</h4>
+                        <h4>${data.main.temp}\u00B0F</h4>
+                        <h4>${data.main.humidity}%</h4>
+                        <h4>${data.wind.speed} mph</h4>
+                    </div>`
+                    CurrentWeatherDiv.innerHTML = '';
+                    CurrentWeatherDiv.appendChild(weatherTemperature);
+                } 
                 // `For the city of ${cityName}:<br>
                 // ${data.main.temp} Degrees Fahrenheit <br> 
                 // ${data.main.humidity}% relative humidity <br>
@@ -50,10 +65,10 @@ searchButton.addEventListener('click', () => {
                 return response.json();
             })
             .then(function (data) {
-                console.log(data);
+                // console.log(data);
                 forecastBlocks.innerHTML='';
                 for (var i = 5; i < data.list.length; i+=8){
-                    console.log(data.list[i]);
+                    // console.log(data.list[i]);
                     var forecastBlock = document.createElement('div');
                     forecastBlock.classList.add('col');
                     forecastBlock.innerHTML = `<b>${new Date(data.list[i].dt * 1000).toLocaleDateString()}</b> <br>
