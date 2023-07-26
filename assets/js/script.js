@@ -2,6 +2,7 @@ let cityName = "";
 let searchButton = document.querySelector('#searchButton');
 let searchInput = document.querySelector('#searchInput')
 let CurrentWeatherDiv = document.querySelector('#currentWeather');
+let forecastBlocks = document.querySelector('#forecastBlocks');
 console.log(dayjs().unix(1690416000))
 
 
@@ -32,6 +33,7 @@ searchButton.addEventListener('click', () => {
                     <h4>${data.main.humidity}%</h4>
                     <h4>${data.wind.speed} mph</h4>
                 </div>`
+                CurrentWeatherDiv.innerHTML = '';
                 CurrentWeatherDiv.appendChild(weatherTemperature);
                 // `For the city of ${cityName}:<br>
                 // ${data.main.temp} Degrees Fahrenheit <br> 
@@ -49,6 +51,16 @@ searchButton.addEventListener('click', () => {
             })
             .then(function (data) {
                 console.log(data);
+                forecastBlocks.innerHTML='';
+                for (var i = 5; i < data.list.length; i+=8){
+                    console.log(data.list[i]);
+                    var forecastBlock = document.createElement('div');
+                    forecastBlock.classList.add('col');
+                    forecastBlock.innerHTML = `<b>${new Date(data.list[i].dt * 1000).toLocaleDateString()}</b> <br>
+                    <img alt="weather icon" src="https://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png"/>, ${data.list[i].main.temp} <br>
+                    ${data.list[i].main.humidity}, ${data.list[i].wind.speed} `
+                    forecastBlocks.appendChild(forecastBlock);
+                }
             })
     }
 
