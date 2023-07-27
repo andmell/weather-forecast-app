@@ -6,6 +6,7 @@ let forecastBlocks = document.querySelector('#forecastBlocks');
 let pastSearches = document.querySelector('#pastSearches');
 renderButtons();
 
+// This function saves the input in the search bar to local storage. It will determine if an array exists (first if), determine if the object is already in the array, and push it to the back if it is (else if) and finally, will just add the object to the array if the first two conditions are false.
 function saveSearch(cityString) {
     const localRead = JSON.parse(localStorage.getItem("historyArray"));
     if (!localRead || localRead.length === 0) {
@@ -21,6 +22,7 @@ function saveSearch(cityString) {
     }
     renderButtons();
 }
+// This function will render buttons based on the searches saved in the local storage, and will run the functions that get the weather and forecast if clicked.
 function renderButtons() {
     pastSearches.innerHTML = '';
     const localReadAgain = JSON.parse(localStorage.getItem("historyArray"))
@@ -35,7 +37,7 @@ function renderButtons() {
         pastSearches.appendChild(pastButton);
     }
 }
-
+// This function will get the weather data based on the input in the search bar. The function will create an element to display the weather data and append it to a pre-existing element in the HTML.
 function getWeather(cityName) {
     let weatherCurrentURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18&units=imperial`;
     fetch(weatherCurrentURL)
@@ -63,7 +65,7 @@ function getWeather(cityName) {
             }
         });
 }
-
+// Similar to the getWeather function, this function will grab weather data for 5 days after the current day. It will create an element to display the data in, which will be repeated 4 more times.
 function getForecast(cityName) {
     let weatherForecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=26533fca4e43095b1b7c7c281ba63a18&units=imperial`;
     fetch(weatherForecastURL)
@@ -84,7 +86,7 @@ function getForecast(cityName) {
             }
         })
 }
-
+// This event listener will run all functions when clicked.
 searchButton.addEventListener('click', () => {
     cityName = searchInput.value;
     getWeather(cityName);
