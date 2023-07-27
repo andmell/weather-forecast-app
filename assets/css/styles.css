@@ -1,3 +1,35 @@
+:root {
+    background-color: rgb(12, 150, 150);
+}
+
 #header {
     background-color:rgba(129, 129, 233, 0.918);
+}
+
+#contentParent {
+    background-color: rgb(12, 150, 150);
+}
+
+#pastSearches {
+    padding: 3%;
+}
+
+#cwBottom {
+    display: flex;
+    align-items: center;
+}
+
+#currentWeather {
+    border: solid black 1px;
+    border-radius: 3px;
+    margin-top: 3%;
+    background-color: rgb(155, 219, 216);
+    display: flex;
+}
+
+#weatherForecast {
+    border: solid black 1px;
+    border-radius: 3px;
+    margin-top: 3%;
+    background-color: rgb(155, 219, 216);
 }
