@@ -26,6 +26,7 @@ function saveSearch(cityString) {
 function renderButtons() {
     pastSearches.innerHTML = '';
     const localReadAgain = JSON.parse(localStorage.getItem("historyArray"))
+    if (localReadAgain){
     for (var i = 0; i < localReadAgain.length; i++) {
         var pastButton = document.createElement('button');
         pastButton.textContent = localReadAgain[i];
@@ -35,7 +36,7 @@ function renderButtons() {
             getForecast(e.target.textContent);
         })
         pastSearches.appendChild(pastButton);
-    }
+    }}
 }
 // This function will get the weather data based on the input in the search bar. The function will create an element to display the weather data and append it to a pre-existing element in the HTML.
 function getWeather(cityName) {

@@ -4,7 +4,7 @@
 This application was created to give the user a way to search for the weather data for any input city. The application includes extensive JavaScript, and dynamically creates elements through DOM traversal. 
 
 ## Installation
-This is a webpage deployed through GitHub's native webpage deployment software. You can navigate to the page [here]().
+This is a webpage deployed through GitHub's native webpage deployment software. You can navigate to the page [here](https://andmell.github.io/weather-forecast-app/).
 
 ## Usage
 On the webpage, type a name of a city and click on the "get weather!" button. The weather data should appear to the right of the search bar. In addition, the search will be saved below the search
